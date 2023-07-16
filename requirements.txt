@@ -1,0 +1,6 @@
+pytest
+streamlit
+openai
+Jinja2
+pandas
+openpyxl
