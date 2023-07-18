@@ -11,4 +11,4 @@ class Config(metaclass=Singleton):
         self.openai_temperature = 1
         self.openai_timeout = 20
 
-        self.file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "example.xlsx")
+        self.file_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "files", "example.xlsx")
