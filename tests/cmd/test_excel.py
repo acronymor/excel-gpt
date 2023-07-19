@@ -7,8 +7,12 @@ from pandas.core.frame import DataFrame
 class TestChatGpt(TestCase):
     def __init__(self, method_name: str = ...) -> None:
         super().__init__(method_name)
-        file: str = "/home/li/Workspace/excel-gpt/files/example.xlsx"
-        self.excel = ExcelOpt(file)
+        self.excel = ExcelOpt()
+
+    def test_head(self):
+        self.excel.open()
+        head: DataFrame = self.excel.head().get("课程清单")
+        print(head)
 
     def test_get(self):
         """
@@ -33,3 +37,7 @@ class TestChatGpt(TestCase):
         assert 1 == shape[0]
         assert 1 == shape[1]
         assert 1 == res3.values[0][0]
+
+        res4 = self.excel.set_cell("课程清单", 1, "课程学分", 111)
+        print(res4)
+        self.excel.save()

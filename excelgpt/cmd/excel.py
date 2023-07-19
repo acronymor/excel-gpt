@@ -7,7 +7,8 @@ from excelgpt.config.config import Config
 class ExcelOpt(object):
     def __init__(self):
         self.cfg = Config()
-        self.xls = pandas.ExcelFile(self.cfg.file_path)
+        self.file = self.cfg.file_path
+        self.xls = pandas.ExcelFile(self.file)
         self.worksheet: dict[str, DataFrame] = {}
 
     def open(self) -> None:
@@ -28,6 +29,10 @@ class ExcelOpt(object):
         res = self.worksheet[worksheet].loc[row, col]
         return pandas.DataFrame(data=res)
 
+    def set_cell(self, worksheet: str, row: str, col: str, value: any) -> DataFrame:
+        res = self.worksheet[worksheet].at[row, col] = value
+        return res
+
     def get_row(self, worksheet: str, row: list[str]) -> DataFrame:
         res = self.worksheet[worksheet].loc[row]
         return pandas.DataFrame(data=res)
@@ -35,3 +40,8 @@ class ExcelOpt(object):
     def get_col(self, worksheet: str, col: list[str]) -> DataFrame:
         res = self.worksheet[worksheet].loc[:, col]
         return pandas.DataFrame(data=res)
+
+    def save(self):
+        with pandas.ExcelWriter(self.file) as writer:
+            for sheet_name in self.xls.sheet_names:
+                self.worksheet[sheet_name].to_excel(writer, sheet_name=sheet_name, index=False)
