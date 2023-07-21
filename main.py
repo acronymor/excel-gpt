@@ -4,20 +4,30 @@ from pandas.core.frame import DataFrame
 
 from excelgpt.cmd.cmd import Command
 from excelgpt.cmd.excel import ExcelOpt
-from excelgpt.config.config import Config
 from excelgpt.llm.chatgpt import ChatGpt
 from excelgpt.prompt.prompt import Prompt
 from excelgpt.scheduler import dag
 from excelgpt.util.log import logger
 
-cfg = Config()
+
+def to_json(body: str) -> list[dict]:
+    res: list[dict] = list()
+
+    import re
+    for line in body.splitlines():
+        line = line.replace("'", "\"")
+        match = re.search(r'\{.*\}', line)
+        if match:
+            res.append(json.loads(match.group()))
+
+    return res
 
 
 def main():
     prompt: Prompt = Prompt()
     excel: ExcelOpt = ExcelOpt()
     excel.open()
-    worksheet: str = "学生清单"
+    worksheet: str = "课程清单"
     head: DataFrame = excel.head().get(worksheet)
 
     synopsis: dict[str, str] = dict()
@@ -35,17 +45,38 @@ def main():
         },
     ]
 
-    print(prompt.render(synopsis))
     gpt: ChatGpt = ChatGpt()
     gpt_res: str = gpt.say(messages)
+    logger.debug(gpt_res)
 
-    json_res = json.loads(gpt_res)
+    json_res = to_json(gpt_res)
+    logger.debug(json.dumps(json_res, ensure_ascii=False))
 
     actions_map: dict = {}
     actions_dep: dict = {}
     for entry in json_res:
         actions_dep[entry["id"]] = entry["dep"]
         actions_map[entry["id"]] = entry
+
+    logger.info("dag: scheduling")
+    actions_list = dag.to(actions_dep)
+
+    logger.info("cmd: executing")
+    cmd: Command = Command()
+
+    for i in actions_list:
+        if i == -1:
+            continue
+
+        if i not in actions_map:
+            logger.error("Execute step %d not in actions_map" % i)
+            continue
+        func_name: str = actions_map[i]["action"]
+        func_args: str = actions_map[i].get("args")
+        logger.debug("Execute step {} -> {}({})".format(i, func_name, func_args))
+        cmd.exec(id=i, command_name=func_name, args=func_args)
+
+    cmd.print(worksheet)
 
 
 if __name__ == '__main__':
