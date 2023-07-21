@@ -22,6 +22,9 @@ class ExcelOpt(object):
 
         return res
 
+    def show(self, worksheet: str) -> str:
+        return self.worksheet[worksheet].to_string()
+
     def get_shape(self, worksheet: str) -> tuple:
         return self.worksheet[worksheet].shape
 
