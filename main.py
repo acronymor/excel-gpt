@@ -31,7 +31,7 @@ def main():
     head: DataFrame = excel.head().get(worksheet)
 
     synopsis: dict[str, str] = dict()
-    synopsis["task"] = "获取所有的课程编号"
+    synopsis["task"] = "对课程名称添加前缀 prefix-"
     synopsis["worksheets"] = {worksheet: head}
 
     messages = [
@@ -51,6 +51,9 @@ def main():
 
     json_res = to_json(gpt_res)
     logger.debug(json.dumps(json_res, ensure_ascii=False))
+    if len(json_res) == 0:
+        logger.error("Error Gpt Response")
+        exit(0)
 
     actions_map: dict = {}
     actions_dep: dict = {}

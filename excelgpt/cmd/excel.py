@@ -33,7 +33,17 @@ class ExcelOpt(object):
         return pandas.DataFrame(data=res)
 
     def set_cell(self, worksheet: str, row: str, col: str, value: any) -> DataFrame:
-        res = self.worksheet[worksheet].at[row, col] = value
+        res = self.worksheet[worksheet].at[int(row), col] = value
+        return res
+
+    def set_col_suffix(self, worksheet: str, col: list[str], value: any) -> DataFrame:
+        res = self.worksheet[worksheet][col].astype('str') + value
+        self.worksheet[worksheet][col] = res
+        return res
+
+    def set_col_prefix(self, worksheet: str, col: list[str], value: any) -> DataFrame:
+        res = value + self.worksheet[worksheet][col].astype('str')
+        self.worksheet[worksheet][col] = res
         return res
 
     def get_row(self, worksheet: str, row: list[str]) -> DataFrame:
@@ -43,6 +53,10 @@ class ExcelOpt(object):
     def get_col(self, worksheet: str, col: list[str]) -> DataFrame:
         res = self.worksheet[worksheet].loc[:, col]
         return pandas.DataFrame(data=res)
+
+    def get_col_sum(self, worksheet: str, col: list[str]) -> DataFrame:
+        res = self.get_col(worksheet, col)
+        return res.sum()
 
     def save(self):
         with pandas.ExcelWriter(self.file) as writer:

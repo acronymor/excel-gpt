@@ -1,7 +1,8 @@
 from unittest import TestCase
 
-from excelgpt.cmd.excel import ExcelOpt
 from pandas.core.frame import DataFrame
+
+from excelgpt.cmd.excel import ExcelOpt
 
 
 class TestChatGpt(TestCase):
@@ -14,7 +15,7 @@ class TestChatGpt(TestCase):
         head: DataFrame = self.excel.head().get("课程清单")
         print(head)
 
-    def test_get(self):
+    def test_demo(self):
         """
         | 课程编号 | 课程名称 | 课程学分 |
         |---|---|---|
@@ -41,3 +42,25 @@ class TestChatGpt(TestCase):
         res4 = self.excel.set_cell("课程清单", 1, "课程学分", 111)
         print(res4)
         self.excel.save()
+
+    def test_set(self):
+        worksheet: str = "课程清单"
+
+        self.excel.open()
+        self.excel.set_cell(worksheet, 0, "课程名称", "英语")
+        self.excel.save()
+        print(self.excel.show(worksheet))
+
+    def test_sum(self):
+        worksheet: str = "课程清单"
+
+        self.excel.open()
+        res = self.excel.get_col_sum(worksheet, ["课程学分"])
+        print(res)
+
+    def test_suffix(self):
+        worksheet: str = "课程清单"
+
+        self.excel.open()
+        res = self.excel.set_col_suffix(worksheet, ["课程学分"])
+        print(res)

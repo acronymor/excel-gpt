@@ -9,6 +9,9 @@ get_cell(self, worksheet: str, row: list[str], col: list[str]): Get cell of work
 set_cell(self, worksheet: str, row: str, col: str, value: any): Set value into cell of worksheet
 get_row(self, worksheet: str, row: list[str]): Get row in worksheet
 get_col(self, worksheet: str, col: list[str]): Get col in worksheet
+get_col_sum(self, worksheet: str, col: list[str]): Get sum of col in worksheet
+set_col_suffix(self, worksheet: str, col: list[str], value: any): Set suffix for col in worksheet
+set_col_prefix(self, worksheet: str, col: list[str], value: any): Set prefix for col in worksheet
 save(self): Save all worksheet in Excel
 ```
 
@@ -30,12 +33,11 @@ I will provide you with the following examples
   2     语文      2
 ```
 
-- Example Task: 请对课程名称前面加上后缀 abc
+- Example Task: 修改第1行课程名称为英语
 ```
 {'action': 'open', 'id': 0, 'dep': [-1], 'args': {}}
-{'action': 'get_col', 'id': 1, 'dep': [0], 'args': {'worksheet': '课程清单', 'col': '课程清单'}}
-{'action': 'set_cell', 'id': 2, 'dep': [-1], 'args': {'worksheet': '学生清单', 'row': '', 'col': ['<resource>-1', 'abc']}}
-{'action': 'save', 'id': 3, 'dep': [1,2], 'args': {}}
+{'action': 'set_cell', 'id': 1, 'dep': [-1], 'args': {'worksheet': '课程清单', 'row': '0', 'col': '课程名称', value:'英语'}}
+{'action': 'save', 'id': 2, 'dep': [1], 'args': {}}
 ```
 
 #Task
