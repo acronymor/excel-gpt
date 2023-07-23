@@ -11,6 +11,9 @@ class ExcelOpt(object):
         self.xls = pandas.ExcelFile(self.file)
         self.worksheet: dict[str, DataFrame] = {}
 
+    def worksheets(self) -> dict[str, DataFrame]:
+        return self.worksheet
+
     def open(self) -> None:
         for sheet_name in self.xls.sheet_names:
             self.worksheet[sheet_name]: DataFrame = self.xls.parse(sheet_name)
@@ -21,9 +24,6 @@ class ExcelOpt(object):
             res[sheet_name] = self.worksheet[sheet_name].head(n)
 
         return res
-
-    def show(self, worksheet: str) -> str:
-        return self.worksheet[worksheet].to_string()
 
     def get_shape(self, worksheet: str) -> tuple:
         return self.worksheet[worksheet].shape

@@ -1,7 +1,8 @@
 from abc import ABC
-
 from excelgpt.cmd.excel import ExcelOpt
 from excelgpt.util.log import logger
+
+from pandas.core.frame import DataFrame
 
 
 class Command(ABC):
@@ -50,8 +51,9 @@ class Command(ABC):
         else:
             logger.error("Not found command: %s" % command_name)
 
-    def print(self, worksheet: str):
+    def to_string(self, worksheet: str) -> DataFrame:
+        res: str = ""
         if self.res is None:
-            print(self.excel.show(worksheet))
-        else:
-            print(self.res.to_string())
+            res = self.excel.worksheets().get(worksheet)
+
+        return res

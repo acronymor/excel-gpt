@@ -1,5 +1,6 @@
 pytest
 streamlit
+streamlit-aggrid
 openai
 Jinja2
 pandas
