@@ -56,7 +56,7 @@ class ExcelOpt(object):
 
     def get_col_sum(self, worksheet: str, col: list[str]) -> DataFrame:
         res = self.get_col(worksheet, col)
-        return res.sum()
+        return pandas.DataFrame(data=res.sum())
 
     def save(self):
         with pandas.ExcelWriter(self.file) as writer:

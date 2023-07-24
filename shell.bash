@@ -16,6 +16,7 @@ function cmd() {
 }
 
 function ui() {
+  export all_proxy="http://127.0.0.1:7890"
   streamlit run excelgpt/api/ui.py --browser.gatherUsageStats=false --server.address=0.0.0.0 --server.port=8090
 }
 

@@ -29,7 +29,7 @@ with col2:
 tabs = [tab for tab in st.tabs(worksheets)]
 for i in range(len(worksheets)):
     with tabs[i]:
-        AgGrid(all_worksheet[worksheets[i]], height=512, width='100%',
+        AgGrid(all_worksheet[worksheets[i]], height=300, width='100%',
                min_column_width=100,
                fit_columns_on_grid_load=True,
                scrollbarWidth=8,
@@ -37,3 +37,9 @@ for i in range(len(worksheets)):
 
 if len(task) != 0:
     res = core.go(worksheet, task)
+    print(res)
+    tab = st.tabs(["Result"])
+    AgGrid(res, height=300, width='100%',
+           fit_columns_on_grid_load=True,
+           scrollbarWidth=8,
+           columns_auto_size_mode=ColumnsAutoSizeMode.NO_AUTOSIZE)

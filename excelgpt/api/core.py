@@ -80,4 +80,4 @@ def go(worksheet: str, task: str) -> str:
         logger.debug("Execute step {} -> {}({})".format(i, func_name, func_args))
         cmd.exec(id=i, command_name=func_name, args=func_args)
 
-    return cmd.to_string(worksheet)
+    return cmd.get(worksheet)

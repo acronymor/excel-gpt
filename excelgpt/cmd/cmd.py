@@ -1,8 +1,9 @@
 from abc import ABC
-from excelgpt.cmd.excel import ExcelOpt
-from excelgpt.util.log import logger
 
 from pandas.core.frame import DataFrame
+
+from excelgpt.cmd.excel import ExcelOpt
+from excelgpt.util.log import logger
 
 
 class Command(ABC):
@@ -37,6 +38,7 @@ class Command(ABC):
             self.excel.get_col(worksheet=args["worksheet"], col=args["col"])
         elif command_name == "get_col_sum":
             self.res = self.excel.get_col_sum(worksheet=args["worksheet"], col=args["col"])
+            self.res.columns = ["sum"]
         elif command_name == "set_col":
             self.excel.set_cell(worksheet=args["worksheet"], row=args["row"], col=args["col"], value=args["value"])
         elif command_name == "set_col_suffix":
@@ -47,13 +49,10 @@ class Command(ABC):
             self.excel.get_shape(worksheet=args["worksheet"])
         elif command_name == "save":
             self.excel.save()
-            self.res = None
         else:
             logger.error("Not found command: %s" % command_name)
 
-    def to_string(self, worksheet: str) -> DataFrame:
-        res: str = ""
+    def get(self, worksheet: str) -> DataFrame:
         if self.res is None:
-            res = self.excel.worksheets().get(worksheet)
-
-        return res
+            return self.excel.worksheets().get(worksheet)
+        return self.res
